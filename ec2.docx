@@ -1,0 +1,201 @@
+Great 👍 This is your lab document for **EC2 (Linux + Windows + SSH + PuTTY + CloudShell + RDP)** 
+
+I will now give you **VERY SIMPLE EXAM-WRITE + PRACTICAL STEPS** so you can directly perform and get output.
+
+---
+
+# ✅ PART 1: Create Ubuntu (Linux) EC2 Instance
+
+### 🔹 Step 1: Launch Instance
+
+1. Login to AWS Console
+2. Go to **EC2 → Instances → Launch Instance**
+3. Name: `Ubuntu-Instance`
+4. AMI → Select **Ubuntu**
+5. Instance type → `t2.micro`
+6. Key pair → Create new → Download `.pem`
+7. Network → Allow SSH (Port 22) → Source: My IP
+8. Click **Launch**
+
+✅ Wait until instance state = **Running**
+
+---
+
+# ✅ PART 2: Connect Linux EC2 Using PuTTY (.pem → .ppk)
+
+## 🔹 Step 1: Convert PEM to PPK
+
+1. Open **PuTTYgen**
+2. Click **Load**
+3. Select `.pem` file (All files)
+4. Click **Save private key**
+5. Save as `.ppk`
+
+---
+
+## 🔹 Step 2: Connect Using PuTTY
+
+1. Open **PuTTY**
+2. Host Name:
+
+```
+ubuntu@Public-IP
+```
+
+3. Left menu →
+   Connection → SSH → Auth → Credentials
+4. Browse → Select `.ppk`
+5. Click **Open**
+6. Click **Yes**
+
+🎉 Connected
+
+---
+
+## 🔹 Verify
+
+Run:
+
+```
+whoami
+```
+
+Output:
+
+```
+ubuntu
+```
+
+---
+
+# ✅ PART 3: Connect Using AWS CloudShell
+
+## 🔹 Step 1: Open CloudShell
+
+Top right corner → Click **CloudShell icon**
+
+---
+
+## 🔹 Step 2: Upload Key
+
+1. Click **Actions (+)**
+2. Upload `.pem` file
+
+---
+
+## 🔹 Step 3: Give Permission
+
+Run:
+
+```
+chmod 400 keyname.pem
+```
+
+---
+
+## 🔹 Step 4: Connect
+
+Go to:
+EC2 → Instance → Connect → SSH Client
+
+Copy command:
+
+```
+ssh -i keyname.pem ubuntu@Public-IP
+```
+
+Paste in CloudShell
+
+🎉 Connected
+
+---
+
+# ✅ PART 4: Create Windows EC2 Instance
+
+## 🔹 Step 1: Launch Instance
+
+1. EC2 → Launch Instance
+2. Select **Windows Server 2019/2022**
+3. Instance type → `t2.micro`
+4. Create Key pair → Download `.pem`
+5. Security group:
+
+   * Allow **RDP**
+   * Port: 3389
+   * Source: My IP
+6. Launch
+
+Wait until **Running**
+
+---
+
+# ✅ PART 5: Get Windows Password
+
+1. EC2 → Select Windows instance
+2. Click **Connect**
+3. Choose **RDP Client**
+4. Click **Get Password**
+5. Upload `.pem`
+6. Click **Decrypt**
+7. Copy password
+
+---
+
+# ✅ PART 6: Connect Using RDP
+
+1. Press `Windows + R`
+2. Type:
+
+```
+mstsc
+```
+
+3. Enter Public IP
+4. Username:
+
+```
+Administrator
+```
+
+5. Paste Password
+6. Click OK
+
+🎉 Windows Desktop opens
+
+---
+
+# 🔥 IMPORTANT FOR LAB EXAM
+
+✔ Always check Security Group
+✔ SSH → Port 22
+✔ RDP → Port 3389
+✔ Use My IP (safer)
+✔ If permission error → run `chmod 400 key.pem`
+
+---
+
+# ✅ Final Output You Must Show Examiner
+
+Linux:
+
+```
+whoami
+```
+
+Output:
+
+```
+ubuntu
+```
+
+Windows:
+Show Windows Desktop via RDP
+
+---
+
+If you want, I can now give you:
+
+* 📄 How to write this in exam theory format (10–15 marks answer)
+* 🧠 Common viva questions they may ask tomorrow
+
+Tell me what you want next 🚀
