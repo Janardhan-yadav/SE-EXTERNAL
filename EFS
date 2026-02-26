@@ -1,0 +1,243 @@
+Perfect 👍 This is your **Week-3 Elastic File System (EFS) Lab** 
+
+I’ll now give you **VERY SIMPLE STEP-BY-STEP PROCEDURE** so tomorrow you can directly perform and show output.
+
+---
+
+# ✅ WHAT IS EFS (1 Line for Viva)
+
+Amazon EFS is a **shared file storage** that can be accessed by **multiple EC2 instances at the same time**.
+
+---
+
+# ✅ PART 1: Launch Two EC2 Instances
+
+You must create **2 Amazon Linux instances**.
+
+---
+
+## 🔹 Step 1: Launch EFS-1
+
+1. Go to **EC2 → Launch Instance**
+2. Name: `EFS-1`
+3. AMI: **Amazon Linux**
+4. Instance Type: `t2.micro`
+5. Key pair: Create or select
+6. Network:
+
+   * Subnet → `Subnet-1a`
+7. Security Group:
+
+   * Create new
+   * Add rule:
+
+     * Type: **NFS**
+     * Port: 2049
+     * Source: Anywhere (0.0.0.0/0)
+8. Click **Launch**
+
+---
+
+## 🔹 Step 2: Launch EFS-2
+
+Repeat same steps:
+
+* Name: `EFS-2`
+* Subnet → `Subnet-1b`
+* Same Security Group (NFS enabled)
+
+🎉 Now you have 2 running instances.
+
+---
+
+# ✅ PART 2: Create EFS File System
+
+---
+
+## 🔹 Step 1: Create EFS
+
+1. Go to **EFS Service**
+2. Click **Create file system**
+3. Select:
+
+   * VPC → Default
+4. Click **Next**
+5. In Network settings:
+
+   * Delete default SG
+   * Select your **NFS Security Group**
+6. Click **Create**
+
+Wait until status = **Available**
+
+---
+
+# ✅ PART 3: Connect to Both EC2 Instances
+
+Open **2 PowerShell / Terminal windows**
+
+---
+
+## 🔹 SSH into EFS-1
+
+```bash
+ssh -i key.pem ec2-user@Public-IP-1
+```
+
+Switch to root:
+
+```bash
+sudo su
+```
+
+Create folder:
+
+```bash
+mkdir efs
+```
+
+Install EFS utility:
+
+```bash
+yum install -y amazon-efs-utils
+```
+
+---
+
+## 🔹 SSH into EFS-2
+
+Repeat same steps:
+
+```bash
+ssh -i key.pem ec2-user@Public-IP-2
+sudo su
+mkdir efs
+yum install -y amazon-efs-utils
+```
+
+---
+
+# ✅ PART 4: Attach (Mount) EFS to Both Instances
+
+---
+
+## 🔹 Step 1: Get Mount Command
+
+1. Go to **EFS**
+2. Select your File System
+3. Click **Attach**
+4. Select **Mount via DNS**
+5. Copy mount command
+
+It will look like:
+
+```bash
+mount -t efs fs-12345678:/ efs
+```
+
+---
+
+## 🔹 Step 2: Run in BOTH EC2 instances
+
+Paste command in:
+
+* EFS-1 terminal
+* EFS-2 terminal
+
+🎉 Now both are connected to same storage.
+
+---
+
+# ✅ PART 5: Verify Sharing (VERY IMPORTANT FOR EXAM)
+
+---
+
+## 🔹 On EFS-1
+
+Go inside folder:
+
+```bash
+cd efs
+```
+
+Create file:
+
+```bash
+touch file1
+```
+
+Check:
+
+```bash
+ls
+```
+
+---
+
+## 🔹 On EFS-2
+
+Go inside folder:
+
+```bash
+cd efs
+```
+
+Check:
+
+```bash
+ls
+```
+
+🎉 You will see `file1`
+
+This proves:
+
+👉 EFS is shared storage
+👉 Both EC2 instances access same data
+
+---
+
+# 🔥 Final Output to Show Examiner
+
+On EFS-1:
+
+```bash
+touch testfile
+```
+
+On EFS-2:
+
+```bash
+ls
+```
+
+If file appears → ✅ SUCCESS
+
+---
+
+# ⚠️ Common Mistakes (Avoid Tomorrow)
+
+❌ Forgot NFS port 2049
+❌ Different VPC
+❌ Didn’t install amazon-efs-utils
+❌ Mounted only on one instance
+❌ Didn’t switch to root
+
+---
+
+# 🧠 Viva Questions They May Ask
+
+1. What port does EFS use? → 2049
+2. Can EBS attach to multiple instances? → No
+3. Can EFS attach to multiple instances? → Yes
+4. Is EFS block storage or file storage? → File storage
+
+---
+
+If you want next:
+
+* 📄 10-mark theory answer format
+* 🔥 Super quick full revision sheet (EC2 + EBS + EFS)
+* 🧠 Full viva preparation
+
+Tell me what you want 🚀
