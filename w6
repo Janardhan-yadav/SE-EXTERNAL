@@ -1,0 +1,296 @@
+Perfect 👍 This is your **Week-6 VPC – Bastion + NAT Gateway Lab** 
+
+I’ll give you:
+
+1. ✅ **Simple Practical Steps (Exam Ready)**
+2. 🧠 **Scenario-Based Answers (Very Important for Viva)**
+
+---
+
+# ✅ PART 1: VPC with Bastion Server (Step-by-Step Simple)
+
+---
+
+## 🔹 Network Design
+
+| Component               | CIDR        |
+| ----------------------- | ----------- |
+| VPC                     | 10.0.0.0/16 |
+| Public Subnet (Bastion) | 10.0.1.0/24 |
+| Private Subnet (DB)     | 10.0.2.0/24 |
+
+---
+
+## 🔹 Step 1: Create VPC + Subnets
+
+* VPC CIDR → `10.0.0.0/16`
+* Public Subnet → `10.0.1.0/24`
+* Private Subnet → `10.0.2.0/24`
+
+---
+
+## 🔹 Step 2: Create Internet Gateway
+
+Attach IGW to VPC.
+
+Public route table:
+
+```
+0.0.0.0/0 → Internet Gateway
+```
+
+Associate with Public Subnet.
+
+Private route table:
+Only local route (no internet).
+
+---
+
+## 🔹 Step 3: Launch EC2 Instances
+
+### Bastion Server
+
+* Subnet → Public
+* Public IP → Yes
+* Key → bastion.pem
+* OS → Ubuntu
+
+### Database Server
+
+* Subnet → Private
+* No public IP
+* Key → dbserver.pem
+
+---
+
+## 🔹 Step 4: Configure Security Groups (VERY IMPORTANT)
+
+### Bastion SG
+
+* SSH (22) → My IP
+
+### DB Server SG
+
+* SSH (22) → Bastion Private IP
+* MySQL (3306) → 10.0.1.0/24
+* ❌ No public access
+
+---
+
+## 🔹 Step 5: Copy DB Key to Bastion
+
+From local system:
+
+```bash
+scp -i bastion.pem dbserver.pem ubuntu@<Bastion_Public_IP>:/home/ubuntu/
+```
+
+---
+
+## 🔹 Step 6: Connect to Bastion
+
+```bash
+ssh -i bastion.pem ubuntu@<Bastion_Public_IP>
+```
+
+Check:
+
+```bash
+ls
+```
+
+---
+
+## 🔹 Step 7: Connect to Private DB Server
+
+```bash
+ssh -i dbserver.pem ubuntu@10.0.2.x
+```
+
+🎉 Successfully accessed private instance securely.
+
+---
+
+# ✅ PART 2: NAT Gateway Setup (For Internet in Private Subnet)
+
+Problem:
+Private instance cannot run:
+
+```
+apt update
+yum update
+```
+
+Because no internet access.
+
+---
+
+## 🔹 Step 1: Create NAT Gateway
+
+1. Go to VPC → NAT Gateway
+2. Click Create
+3. Select:
+
+   * Public Subnet (VERY IMPORTANT)
+   * Allocate Elastic IP
+4. Create
+
+---
+
+## 🔹 Step 2: Update Private Route Table
+
+Go to Private Route Table → Edit routes
+
+Add:
+
+```
+0.0.0.0/0 → NAT Gateway
+```
+
+Save.
+
+---
+
+## 🔹 Step 3: Test
+
+SSH to DB server via Bastion.
+
+Run:
+
+```bash
+sudo apt update
+```
+
+🎉 Now internet works in private subnet.
+
+---
+
+# 🧠 PART 3: Scenario-Based Answers (Exam Ready)
+
+---
+
+### **1️⃣ Multiple private subnets in different AZs**
+
+Use **Multiple NAT Gateways (one per AZ)**.
+
+Reason:
+
+* High availability
+* Avoid cross-AZ traffic cost
+
+---
+
+### **2️⃣ Private subnet reaches internet but NAT shows no traffic**
+
+Possible reasons:
+
+* Route table not pointing to NAT
+* NAT created in wrong subnet
+* Security group blocking
+
+---
+
+### **3️⃣ NAT created in private subnet**
+
+Problem:
+NAT cannot access internet.
+
+Fix:
+
+* Delete NAT
+* Recreate in Public Subnet
+* Attach Elastic IP
+
+---
+
+### **4️⃣ Restrict outbound traffic**
+
+Use:
+
+* Network ACL rules
+* Security group outbound rules
+* VPC endpoints (for AWS services)
+
+---
+
+### **5️⃣ One team affecting others**
+
+Redesign:
+
+* Separate NAT Gateway per subnet/team
+* Separate VPCs
+* Use Transit Gateway
+
+---
+
+### **6️⃣ Bastion works but apt update fails**
+
+Reason:
+No NAT Gateway or wrong route table.
+
+---
+
+### **7️⃣ Private instance has internet but no SSH via Bastion**
+
+Reason:
+
+* Security group misconfigured
+* Bastion private IP not allowed
+* SSH port blocked
+
+---
+
+### **8️⃣ Bastion & NAT both in private subnet**
+
+Impact:
+
+* No internet
+* Bastion not accessible
+* NAT useless
+
+---
+
+### **9️⃣ SSH to Bastion works but not to private EC2**
+
+Check:
+
+* DB security group
+* Correct private IP
+* Key permissions
+
+---
+
+### **🔟 Bastion is not replacement for NAT**
+
+Reason:
+
+| Bastion             | NAT                       |
+| ------------------- | ------------------------- |
+| Used for SSH access | Used for internet access  |
+| Manual connection   | Automatic outbound access |
+
+Bastion does NOT provide internet to private instances.
+
+---
+
+# 🔥 Quick Viva Summary
+
+| Component   | Purpose                            |
+| ----------- | ---------------------------------- |
+| Bastion     | Secure SSH entry point             |
+| NAT Gateway | Internet access for private subnet |
+| IGW         | Internet access for public subnet  |
+| Route Table | Traffic direction                  |
+| Elastic IP  | Required for NAT                   |
+
+---
+
+If you want now:
+
+🔥 FINAL COMPLETE REVISION (All 6 Weeks)
+OR
+📄 10–15 Mark Theory Answers for VPC + NAT
+OR
+🧠 Rapid Fire Viva Questions
+
+Tell me what you want 🚀
