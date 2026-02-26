@@ -1,0 +1,285 @@
+Perfect 👍 This is your **Week-2 EBS Lab** document 
+
+I’ll now give you **EXAM-READY + PRACTICAL SIMPLE STEPS** so you can directly perform tomorrow without confusion.
+
+---
+
+# ✅ 1(a) Create & Attach EBS Volume to EC2
+
+## 🔹 Step 1: Create Volume
+
+1. Go to **EC2 → Volumes**
+2. Click **Create Volume**
+3. Select:
+
+   * Volume type → `gp3`
+   * Size → `10 or 20 GB`
+   * Availability Zone → SAME as EC2 instance
+4. Click **Create Volume**
+
+⚠️ Important: AZ must match EC2 instance.
+
+---
+
+## 🔹 Step 2: Attach Volume
+
+1. Select the created volume
+2. Click **Actions → Attach Volume**
+3. Choose EC2 instance
+4. Device name → `/dev/xvdf`
+5. Click **Attach**
+
+---
+
+## 🔹 Step 3: Verify in Linux
+
+Connect via SSH and run:
+
+```bash
+lsblk
+```
+
+You will see new disk like:
+
+```
+nvme1n1
+```
+
+🎉 Volume attached successfully.
+
+---
+
+# ✅ 1(b) Increase CPU & RAM (Change Instance Type)
+
+⚠️ Instance must be stopped.
+
+### 🔹 Steps:
+
+1. EC2 → Instances
+2. Select instance
+3. Click **Stop**
+4. After stopped:
+
+   * Click **Actions → Instance Settings → Change Instance Type**
+5. Choose bigger type (example: `t2.small` or `t2.medium`)
+6. Click **Apply**
+7. Click **Start**
+
+🎉 CPU & RAM increased.
+
+---
+
+# ✅ 2. Permanently Mount EBS (Very Important for Lab)
+
+This ensures data stays after reboot.
+
+---
+
+## 🔹 Step 1: Check Disk
+
+```bash
+lsblk
+```
+
+Example new disk:
+
+```
+/dev/nvme1n1
+```
+
+---
+
+## 🔹 Step 2: Create Partition
+
+```bash
+sudo fdisk /dev/nvme1n1
+```
+
+Inside fdisk:
+
+```
+n
+p
+Enter
+Enter
+Enter
+w
+```
+
+Then:
+
+```bash
+sudo partprobe
+```
+
+---
+
+## 🔹 Step 3: Format Disk
+
+```bash
+sudo mkfs.xfs /dev/nvme1n1p1
+```
+
+---
+
+## 🔹 Step 4: Create Folder
+
+```bash
+sudo mkdir /mnt/data
+```
+
+---
+
+## 🔹 Step 5: Mount Volume
+
+```bash
+sudo mount /dev/nvme1n1p1 /mnt/data
+```
+
+Verify:
+
+```bash
+df -h
+```
+
+---
+
+## 🔹 Step 6: Make Permanent (VERY IMPORTANT)
+
+Get UUID:
+
+```bash
+sudo blkid
+```
+
+Copy UUID of nvme1n1p1
+
+Edit:
+
+```bash
+sudo nano /etc/fstab
+```
+
+Add line:
+
+```
+UUID=your-uuid-here   /mnt/data   xfs   defaults,nofail   0   0
+```
+
+Save & exit.
+
+Test:
+
+```bash
+sudo mount -a
+```
+
+---
+
+## 🔹 Step 7: Test Persistence
+
+```bash
+sudo reboot
+```
+
+After reconnect:
+
+```bash
+df -h
+```
+
+🎉 Volume automatically mounted.
+
+---
+
+# ✅ 3. Snapshot → Copy to Another Region → Create Volume
+
+---
+
+## 🔹 Step 1: Create Snapshot
+
+1. EC2 → Volumes
+2. Select volume
+3. Actions → **Create Snapshot**
+4. Give name
+5. Click Create
+
+Wait until status = **Completed**
+
+---
+
+## 🔹 Step 2: Copy Snapshot to Another Region
+
+1. EC2 → Snapshots
+2. Select snapshot
+3. Actions → **Copy Snapshot**
+4. Choose destination region
+5. Click Copy
+
+Wait until completed.
+
+---
+
+## 🔹 Step 3: Switch Region (Top Right)
+
+Change to destination region.
+
+---
+
+## 🔹 Step 4: Create Volume from Snapshot
+
+1. EC2 → Snapshots
+2. Select copied snapshot
+3. Click **Create Volume**
+4. Select AZ
+5. Click Create
+
+---
+
+## 🔹 Step 5: Attach to EC2 in New Region
+
+1. EC2 → Volumes
+2. Select volume
+3. Actions → Attach
+4. Select instance
+5. Attach
+
+Then mount using:
+
+```bash
+lsblk
+mount /dev/nvme1n1p1 /mnt/data
+```
+
+🎉 Data available in new region.
+
+---
+
+# 🔥 What Examiner Will Check
+
+✔ Volume attached
+✔ lsblk shows disk
+✔ df -h shows mounted
+✔ File created inside mount folder
+✔ After reboot → still mounted
+✔ Snapshot copied successfully
+
+---
+
+# ⚠️ Common Mistakes (Avoid Tomorrow)
+
+❌ Different Availability Zone
+❌ Forgot to stop instance before resizing
+❌ Forgot mkfs (format)
+❌ Forgot fstab entry
+❌ Wrong UUID in fstab
+
+---
+
+If you want next:
+
+* 📄 Short theory answer for 10 marks
+* 🧠 Viva questions & answers
+* 🔥 Super quick revision sheet (1 page)
+
+Tell me what you want 🚀
