@@ -1,0 +1,244 @@
+Perfect 👍 This is your **Week-4 S3 Lab** document 
+
+I’ll now give you **EXAM PRACTICAL PROCEDURE (Simple + Direct Output Steps)** so you can finish quickly tomorrow.
+
+---
+
+# ✅ PART 1: Create S3 Bucket & Enable Public Access
+
+---
+
+## 🔹 Step 1: Create Bucket
+
+1. Go to **S3**
+2. Click **Create bucket**
+3. Bucket name → `my-public-bucket-123`
+4. Region → Nearest region
+5. ❗ Under **Block Public Access**
+
+   * Uncheck **Block all public access**
+   * Tick acknowledge box
+6. Click **Create bucket**
+
+---
+
+## 🔹 Step 2: Enable Bucket Public ACL
+
+1. Open bucket
+2. Go to **Permissions**
+3. Scroll to **ACL**
+4. Click **Edit**
+5. Under Public access:
+
+   * ✔ Everyone → Read
+6. Save
+
+---
+
+## 🔹 Step 3: Upload File
+
+1. Go to **Objects**
+2. Click **Upload**
+3. Add file (example: image.jpg)
+4. Upload
+
+---
+
+## 🔹 Step 4: Enable Object-Level Public Access
+
+1. Click uploaded object
+2. Go to **Permissions**
+3. Scroll to **ACL**
+4. Click Edit
+5. ✔ Everyone → Read
+6. Save
+
+---
+
+## 🔹 Step 5: Verify
+
+1. Copy **Object URL**
+2. Open in incognito browser
+
+🎉 File should open without login.
+
+---
+
+# ✅ PART 2: Enable Versioning
+
+---
+
+## 🔹 Step 1: Enable Versioning
+
+1. Open bucket
+2. Go to **Properties**
+3. Scroll to **Versioning**
+4. Click **Edit**
+5. Select **Enable**
+6. Save
+
+---
+
+## 🔹 Step 2: Test Versioning
+
+### Upload file:
+
+`report.pdf`
+
+Upload again with same name.
+
+👉 Go to **Show Versions**
+
+You will see:
+
+* Version ID 1
+* Version ID 2
+
+---
+
+## 🔹 Step 3: Delete File
+
+Click Delete.
+
+👉 You will see:
+
+* Delete Marker created
+* Old versions still exist
+
+🎉 Versioning working.
+
+---
+
+# ✅ PART 3: Cross-Region Replication (CRR)
+
+---
+
+## 🔹 Step 1: Create Destination Bucket
+
+1. Create new bucket
+2. Different region
+3. Enable Versioning (Important)
+
+---
+
+## 🔹 Step 2: Create Replication Rule
+
+1. Open **Source bucket**
+2. Go to **Management**
+3. Click **Replication rules**
+4. Click **Create rule**
+5. Rule name → `crr-rule`
+6. Apply to → All objects
+7. Choose destination bucket
+8. Select **Use AWS managed role**
+9. Save
+
+---
+
+## 🔹 Step 3: Test
+
+Upload new file in source bucket.
+
+Open destination bucket.
+
+🎉 File appears automatically.
+
+---
+
+# ✅ PART 4: Static Website Hosting
+
+---
+
+## 🔹 Step 1: Create Bucket
+
+1. Create bucket
+2. Disable block public access
+3. Create
+
+---
+
+## 🔹 Step 2: Upload Files
+
+Upload:
+
+* index.html
+* error.html
+
+---
+
+## 🔹 Step 3: Enable Static Hosting
+
+1. Go to **Properties**
+2. Scroll to **Static Website Hosting**
+3. Click Edit
+4. Enable
+5. Index → index.html
+6. Error → error.html
+7. Save
+
+---
+
+## 🔹 Step 4: Enable Public Access (IMPORTANT)
+
+### Bucket level:
+
+Permissions → ACL → Everyone → Read
+
+### Object level:
+
+For index.html & error.html → ACL → Everyone → Read
+
+---
+
+## 🔹 Step 5: Access Website
+
+Go to:
+Properties → Static Website Hosting
+
+Copy endpoint:
+
+```
+http://bucket-name.s3-website-region.amazonaws.com
+```
+
+Open in browser.
+
+🎉 Website loads.
+
+---
+
+# 🔥 If Website Shows 403 Error
+
+Most common reason:
+❌ Object ACL not public
+❌ Block public access not disabled
+
+---
+
+# 🧠 VERY IMPORTANT VIVA ANSWERS
+
+1. What is S3? → Object storage
+2. What is versioning? → Keeps multiple versions
+3. What is CRR? → Replicates data to another region
+4. What is needed for CRR? → Versioning on both buckets
+5. What is delete marker? → Special marker created when deleting in versioning
+
+---
+
+# ⚠️ Common Mistakes Tomorrow
+
+❌ Forgot to disable block public access
+❌ Forgot object-level ACL
+❌ Didn’t enable versioning before CRR
+❌ Same region for CRR
+❌ Forgot index.html name correctly
+
+---
+
+If you want now I can give you:
+
+* 🔥 One-page FINAL REVISION of EC2 + EBS + EFS + S3
+* 🧠 All 15 scenario answers (important for exam)
+* 📄 Theory answers (long answer format)
+
+Tell me what you want 🚀
