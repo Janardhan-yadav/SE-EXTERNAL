@@ -1,0 +1,314 @@
+Perfect 👍 This is your **Week-5 VPC Lab File** 
+
+Now I’ll give you:
+
+1. ✅ **Simple Practical Steps (Exam Ready)**
+2. 🧠 **Scenario-Based Answers (Very Important for Viva)**
+
+---
+
+# ✅ PART 1: VPC Creation – SIMPLE STEP-BY-STEP
+
+---
+
+## 🔹 Step 1: Create VPC
+
+1. Go to **VPC → Create VPC**
+2. Select **VPC only**
+3. Name: `Custom-VPC`
+4. IPv4 CIDR: `10.0.0.0/16`
+5. Click **Create**
+
+---
+
+## 🔹 Step 2: Create Subnets
+
+### Public Subnet
+
+* CIDR: `10.0.1.0/24`
+* AZ: ap-south-1a (example)
+
+### Private Subnet
+
+* CIDR: `10.0.2.0/24`
+* Same AZ
+
+Go to:
+VPC → Subnets → Create subnet → Select VPC → Enter CIDR
+
+---
+
+## 🔹 Step 3: Create Internet Gateway
+
+1. VPC → Internet Gateways
+2. Click **Create**
+3. Name: `Custom-IGW`
+4. Attach to your VPC
+
+---
+
+## 🔹 Step 4: Create Route Tables
+
+### Public Route Table
+
+1. Create route table
+2. Add route:
+
+```
+Destination: 0.0.0.0/0
+Target: Internet Gateway
+```
+
+3. Associate with **Public Subnet**
+
+---
+
+### Private Route Table
+
+* Keep only default local route
+* Associate with **Private Subnet**
+
+---
+
+## 🔹 Step 5: Enable Public IP
+
+Go to Public Subnet → Edit subnet settings →
+Enable **Auto-assign Public IPv4**
+
+---
+
+## 🔹 Step 6: Security Group
+
+Create SG:
+
+* SSH (22) → My IP
+* HTTP (80)
+* HTTPS (443)
+
+Attach to EC2.
+
+---
+
+## 🔹 Step 7: Launch EC2
+
+* Public EC2 → Public Subnet
+* Private EC2 → Private Subnet
+
+---
+
+## 🔹 Final Output to Show Examiner
+
+✔ Public EC2 → Internet works
+✔ Private EC2 → No direct internet
+✔ Private reachable only internally
+
+---
+
+# 🧠 PART 2: Scenario-Based Answers (Exam Ready)
+
+---
+
+### **1️⃣ Web App + Database Design**
+
+Public Subnet:
+
+* Web Server
+* Load Balancer
+
+Private Subnet:
+
+* Application Server
+* Database (RDS)
+
+Reason:
+Database must not be exposed to internet.
+
+---
+
+### **2️⃣ Public EC2 cannot access internet**
+
+Check:
+
+* Internet Gateway attached?
+* Route table has `0.0.0.0/0` → IGW?
+* Public IP assigned?
+* Security Group allows outbound?
+
+---
+
+### **3️⃣ App server connecting to RDS**
+
+* Both in private subnets
+* RDS SG allows inbound from App Server SG
+* No public access to RDS
+
+---
+
+### **4️⃣ Designing for 2000 servers**
+
+Use larger CIDR:
+
+Example:
+
+```
+10.0.0.0/16
+```
+
+Provides 65,536 IPs.
+
+---
+
+### **5️⃣ On-premise connectivity**
+
+For small setup → **Site-to-Site VPN**
+
+For high bandwidth + stable → **AWS Direct Connect**
+
+---
+
+### **6️⃣ Two VPCs with same CIDR**
+
+Cannot use VPC peering.
+
+Solution:
+
+* Change CIDR of one VPC
+  OR
+* Use NAT + PrivateLink
+
+---
+
+### **7️⃣ Microservices in different subnets**
+
+* Use same VPC
+* Security groups allow inter-service communication
+* Proper route tables
+
+---
+
+### **8️⃣ 3-Tier Architecture Design**
+
+Public Subnet:
+
+* Load Balancer
+* Web servers
+
+Private Subnet 1:
+
+* Application servers
+
+Private Subnet 2:
+
+* Database
+
+Use:
+
+* IGW for public
+* NAT for private
+* Separate SG rules
+
+---
+
+### **9️⃣ Monitor unusual traffic**
+
+Use:
+
+* VPC Flow Logs
+* CloudWatch
+* AWS CloudTrail
+
+---
+
+### **🔟 Why private subnet cannot attach IGW?**
+
+Internet Gateway works at VPC level.
+
+Private subnet does not have route to IGW.
+
+---
+
+### **1️⃣1️⃣ Route table misconfigured**
+
+* No internet access
+* Instances unreachable
+* Internal communication fails
+
+---
+
+### **1️⃣2️⃣ No local route**
+
+Instances inside VPC cannot communicate.
+
+Local route is mandatory.
+
+---
+
+### **1️⃣3️⃣ Port 80 allowed but still blocked**
+
+Possible reasons:
+
+* Network ACL blocking
+* Route issue
+* Application not running
+
+---
+
+### **1️⃣4️⃣ VPC for 1000+ instances**
+
+Use:
+
+```
+10.0.0.0/16
+```
+
+Divide into multiple /24 subnets across AZs.
+
+---
+
+### **1️⃣5️⃣ Only corporate IP can SSH**
+
+Security Group rule:
+
+```
+SSH → Source: Corporate IP/32
+```
+
+Example:
+
+```
+103.25.10.5/32
+```
+
+---
+
+### **1️⃣6️⃣ EC2 sends traffic but no response**
+
+Possible issue:
+
+* Network ACL blocking inbound
+* Asymmetric routing
+* Security Group outbound only allowed
+
+---
+
+# 🔥 Final Quick Viva Points
+
+| Component      | Purpose                 |
+| -------------- | ----------------------- |
+| VPC            | Network boundary        |
+| Subnet         | IP segmentation         |
+| IGW            | Internet access         |
+| NAT            | Private internet access |
+| Route Table    | Traffic direction       |
+| Security Group | Instance firewall       |
+| NACL           | Subnet firewall         |
+
+---
+
+If you want now:
+
+🔥 Full Final Revision (EC2 + EBS + EFS + S3 + VPC) in 10 minutes
+OR
+📄 Long theory answers for 10–15 marks
+
+Tell me what you want 🚀
